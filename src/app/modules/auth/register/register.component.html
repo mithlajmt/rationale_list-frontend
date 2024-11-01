@@ -1,0 +1,195 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full mx-auto">
+    <!-- Card Container -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 space-y-8 transform transition-all duration-300 hover:shadow-2xl">
+      <!-- Header with Icon -->
+      <div class="text-center">
+        <div class="mx-auto h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+        </div>
+        <h2 class="mt-4 text-3xl font-extrabold text-gray-900 tracking-tight">
+          Join our community
+        </h2>
+        <p class="mt-2 text-base text-gray-500">
+          Better Health Better Life
+        </p>
+      </div>
+
+      <!-- Registration Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-100 rounded-full h-1.5">
+          <div class="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+               [style.width]="getFormProgress() + '%'">
+          </div>
+        </div>
+
+        <!-- Form Fields Container -->
+        <div class="space-y-5">
+          <!-- Name Input -->
+          <div class="relative group">
+            <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">
+              username
+            </label>
+            <div class="relative">
+              <input
+                id="userName"
+                type="text"
+                formControlName="userName"
+                class="block w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
+                [class.border-red-300]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+                placeholder="John Doe"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg *ngIf="registerForm.get('userName')?.valid && registerForm.get('userName')?.touched"
+                     class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <div @fadeSlide *ngIf="registerForm.get('userName')?.touched && registerForm.get('userName')?.invalid" 
+                 class="text-red-500 text-sm mt-1 ml-1">
+              <span *ngIf="registerForm.get('userName')?.hasError('required')">userName is required</span>
+              <span *ngIf="registerForm.get('userName')?.hasError('minlength')">userName must be at least 3 characters</span>
+            </div>
+          </div>
+          
+
+          <!-- Email Input -->
+          <div class="relative group">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+              Email address
+            </label>
+            <div class="relative">
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="block w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
+                [class.border-red-300]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                placeholder="you@example.com"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg *ngIf="registerForm.get('email')?.valid && registerForm.get('email')?.touched" 
+                     class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <div @fadeSlide *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" 
+                 class="text-red-500 text-sm mt-1 ml-1">
+              <span *ngIf="registerForm.get('email')?.hasError('required')">Email is required</span>
+              <span *ngIf="registerForm.get('email')?.hasError('email')">Please enter a valid email</span>
+            </div>
+          </div>
+
+
+<!-- passwordsectoin -->
+          <div class="relative group">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+              password 
+            </label>
+            <div class="relative">
+              <input
+                id="password"
+                type="tel"
+                formControlName="password"
+                class="block w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
+                [class.border-red-300]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                placeholder="enter password"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg *ngIf="registerForm.get('password')?.valid && registerForm.get('password')?.touched" 
+                     class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <div @fadeSlide *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" 
+                 class="text-red-500 text-sm mt-1 ml-1">
+              <span *ngIf="registerForm.get('password')?.hasError('required')">password is required</span>
+              <span *ngIf="registerForm.get('password')?.hasError('minlength')">minimum length 8 requires </span>
+            </div>
+          </div>
+          
+
+          <!-- User Type Selection -->
+          <div class="relative group">
+            <label for="user_type" class="block text-sm font-medium text-gray-700 mb-1">
+              I want to join as
+            </label>
+            <div class="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                (click)="setUserType('admin')"
+                class="flex flex-col items-center p-4 border rounded-lg transition-all duration-300"
+                [class.bg-blue-50]="registerForm.get('user_type')?.value === 'admin'"
+                [class.border-blue-500]="registerForm.get('user_type')?.value === 'admin'"
+                [class.border-gray-200]="registerForm.get('user_type')?.value !== 'admin'"
+              >
+                <svg class="w-6 h-6 mb-2" [class.text-blue-500]="registerForm.get('user_type')?.value === 'admin'"
+                     [class.text-gray-400]="registerForm.get('user_type')?.value !== 'admin'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+                <span class="text-sm font-medium">Admin</span>
+              </button>
+              <button
+                type="button"
+                (click)="setUserType('user')"
+                class="flex flex-col items-center p-4 border rounded-lg transition-all duration-300"
+                [class.bg-blue-50]="registerForm.get('user_type')?.value === 'user'"
+                [class.border-blue-500]="registerForm.get('user_type')?.value === 'user'"
+                [class.border-gray-200]="registerForm.get('user_type')?.value !== 'user'"
+              >
+                <svg class="w-6 h-6 mb-2" [class.text-blue-500]="registerForm.get('user_type')?.value === 'user'"
+                     [class.text-gray-400]="registerForm.get('user_type')?.value !== 'user'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+                <span class="text-sm font-medium">Client</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <!-- Submit Button -->
+<div class="space-y-4">
+  <button
+    type="submit"
+    [disabled]="!registerForm.valid"
+    class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+  >
+    <span>Create Account</span>
+    <svg *ngIf="registerForm.valid" class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+    </svg>
+  </button>
+
+  <!-- Error Message -->
+  <div
+    *ngIf="error.show"
+    class="text-center text-red-500 text-sm font-semibold bg-red-100 border border-red-200 rounded-lg p-2 mt-2"
+    @fadeSlide
+  >
+    {{ error.message }}
+  </div>
+
+  <!-- Login Link -->
+  <button class="text-center" (click)="navigate()">
+    <span class="text-sm text-gray-600">Already have an account? </span>
+    <a
+      routerLink="/auth/login"
+      class="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors duration-300"
+    >
+      Log in
+    </a>
+  </button>
+</div>
+
+      </form>
+    </div>
+  </div>
+</div>
