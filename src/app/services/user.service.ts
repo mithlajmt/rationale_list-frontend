@@ -41,5 +41,8 @@ export class UserService {
   getSpecialityList(){
     return this.http.get(`${this.userApi}/user/specialities`);
   }
+  updateRationale(id:any,body:any){
+    return this.http.put(`${this.userApi}/user/rationale/${id}`,body);
+  }
 
 }
