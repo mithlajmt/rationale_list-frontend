@@ -36,6 +36,11 @@ export class RationalListComponent implements OnInit {
     this.router.navigate([`/user/rationale/${rationaleId}`]);
   }
 
+  navigateToAddNew(){
+    this.router.navigate([`/user/rationale/add`]);
+
+  }
+
   toggleSpecialty(rationale: any, event: Event): void {
     event.stopPropagation(); // Prevents triggering the navigation
     rationale.enable = !rationale.enable;

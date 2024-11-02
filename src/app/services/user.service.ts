@@ -30,5 +30,16 @@ export class UserService {
     return this.http.get(`${this.userApi}/user/rationale`);
   }
 
+  getRationalData(id:any){
+    return this.http.get(`${this.userApi}/user/rationale/${id}`);
+  }
+
+  getDecisionList(){
+    return this.http.get(`${this.userApi}/user/decisions`);
+  }
+
+  getSpecialityList(){
+    return this.http.get(`${this.userApi}/user/specialities`);
+  }
 
 }

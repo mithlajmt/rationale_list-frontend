@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'rationale', pathMatch: 'full' },
   { path: 'rationale', component: RationalListComponent },
   { path: 'rationale/:id', component: RationalDataComponent },
+  { path: 'rationale/add', component: RationalDataComponent },
   // ... other routes
 ];
 

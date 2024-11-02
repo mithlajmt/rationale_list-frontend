@@ -19,6 +19,7 @@ import { RationalDataComponent } from './components/rational-data/rational-data.
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class UserModule { }
