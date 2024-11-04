@@ -9,7 +9,6 @@ export class TokenGuard implements CanActivate {
 
   canActivate(): boolean {
     const token = localStorage.getItem('authToken');
-    const role = localStorage.getItem('role');
  
 
     if(token==null||token=='') {
@@ -17,7 +16,7 @@ export class TokenGuard implements CanActivate {
     }
     if (token) {
       // If token exists, redirect to /user/courses
-      this.router.navigate([`${role}`]);
+      this.router.navigate([`user/rationale`]);
       return false; // Prevent activation of the current route
     }
 

@@ -21,6 +21,33 @@ export class RationalDataComponent implements OnInit {
   modifierInput = '';
   isEditingProcedure: any = {};
 
+   rationaleGroups = [
+    {
+        GroupID: 0,
+        GroupName: 'Rationale defined by Procedure to Procedure (PTP) edits'
+    },
+    {
+        GroupID: 1,
+        GroupName: 'Rationale defined by National Council on Compensation Insurance (NCCI)'
+    },
+    {
+        GroupID: 2,
+        GroupName: 'Most frequently used rationale'
+    },
+    {
+        GroupID: 3,
+        GroupName: 'All others'
+    },
+    {
+        GroupID: 4,
+        GroupName: 'Rationale that are applicable to certain modifiers'
+    },
+    {
+        GroupID: 5,
+        GroupName: 'Client specific rationale'
+    }
+];
+
   constructor(
     private rServe: UserService,
     private route: ActivatedRoute,
@@ -45,63 +72,12 @@ export class RationalDataComponent implements OnInit {
       Decision: ['', Validators.required],
       specialties: this.fb.array([], [Validators.required, this.specialtyRequiredValidator()]),
       procedures: this.fb.array([]),
-      modifiers: ['']
-    });
-  }
-  
-  private loadSpecialties(): void {
-    this.rServe.getSpecialityList().subscribe({
-      next: (res: any) => {
-        const existingSpecialtyCodes = this.rationaleData?.specialties.map((s: any) => s.SpecialtyCode) || [];
-        this.specialtiesList = res.data.filter((specialty: any) =>
-          !existingSpecialtyCodes.includes(specialty.SpecialtyCode)
-        );
-      },
-      error: (error) => console.error("Error fetching specialty list:", error)
+      modifiers: [''],
+      GroupID:['',Validators.required]
     });
   }
 
 
-  toggleSpecialtyInput() {
-    this.showSpecialtyInput = !this.showSpecialtyInput;
-    if (this.showSpecialtyInput) {
-      this.loadSpecialties();
-      this.filteredSpecialties = this.specialtiesList;
-    }
-  }
-
-  filterSpecialties(): void {
-    this.filteredSpecialties = this.specialtiesList.filter(specialty =>
-      specialty.SpecialtyCode.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
-
-  addSpecialty(specialty: any): void {
-    const specialtiesArray = this.rationalForm.get('specialties') as FormArray;
-    specialtiesArray.push(this.createSpecialtyFormGroup({
-      SpecialtyCode: specialty.SpecialtyCode,
-      Enable: true
-    }));
-    this.specialtiesList = this.specialtiesList.filter(s => s.SpecialtyCode !== specialty.SpecialtyCode);
-    this.filteredSpecialties = this.specialtiesList.filter(s =>
-      s.SpecialtyCode.toLowerCase().includes(this.searchTerm?.toLowerCase() || '')
-    );
-    this.searchTerm = '';
-    this.showSpecialtyInput = false;
-  }
-
-
-  private loadDecisionList(): void {
-    this.rServe.getDecisionList().subscribe({
-      next: (res: any) => {
-        this.DecisionsList = res.data.map((decision: any) => ({
-          id: decision.id,
-          DecisionText: decision.DecisionText,
-        }));
-      },
-      error: (error) => console.error("Error fetching decision list:", error)
-    });
-  }
 
   private loadRationaleData(): void {
     this.rServe.getRationalData(this.id).subscribe({
@@ -113,14 +89,31 @@ export class RationalDataComponent implements OnInit {
     });
   }
 
-  private patchFormValues(): void {
+  private loadDecisionList(): void {
+    this.rServe.getDecisionList().subscribe({
+      next: (res: any) => {
+        this.DecisionsList = res.data.map((decision: any) => ({
+          id: decision._id,
+          DecisionText: decision.DecisionText,
+        }));
+        console.log(res.data)
+      },
+      error: (error) => {console.error("Error fetching decision list:", error)
+        alert(error.error.message)
+      }
+    });
+  }
+
+
+  private patchFormValues(): void {    
     this.rationalForm.patchValue({
       rationaleSummary: this.rationaleData?.RationaleSummary || '',
       rationaleText: this.rationaleData?.RationaleText || '',
       Module: this.rationaleData?.Module || '',
       Enable: this.rationaleData?.Enable || false,
       Decision: this.rationaleData.decision[0]?.DecisionText || '',
-      modifiers: this.rationaleData?.modifiers[0]?.ModifierList || ''
+      modifiers: this.rationaleData?.modifiers[0]?.ModifierList || '',
+      GroupID: this.rationaleData?.GroupID
     });
 
     const specialtiesArray = this.rationalForm.get('specialties') as FormArray;
@@ -136,12 +129,65 @@ export class RationalDataComponent implements OnInit {
     });
   }
 
+
+  existingSpecialtyCodes : any
+
+  private loadSpecialties(): void {
+    this.rServe.getSpecialityList().subscribe({
+      next: (res: any) => {
+        this.existingSpecialtyCodes = this.rationaleData?.specialties.map((s: any) => s.SpecialtyCode) || [];
+        this.specialtiesList = res.data.filter((specialty: any) =>
+          !this.existingSpecialtyCodes.includes(specialty.SpecialtyCode)
+      );
+    },
+      error: (error) => {console.error("Error fetching specialty list:", error)
+        alert(error.error.message)
+      }
+      
+    });
+  }
+  
+  addSpecialty(specialty: any): void {
+    this.existingSpecialtyCodes.push(specialty.SpecialtyCode)
+    console.log(this.existingSpecialtyCodes)
+    const specialtiesArray = this.rationalForm.get('specialties') as FormArray;
+    specialtiesArray.push(this.createSpecialtyFormGroup({
+      SpecialtyCode: specialty.SpecialtyCode,
+      Enable: true
+    }));
+
+    this.specialtiesList = this.specialtiesList.filter(s => s.SpecialtyCode !== specialty.SpecialtyCode);
+    console.log(this.specialtiesList)
+    this.filteredSpecialties = this.specialtiesList.filter(s =>
+      s.SpecialtyCode.toLowerCase().includes(this.searchTerm?.toLowerCase() || '')
+    );
+    this.searchTerm = '';
+    this.showSpecialtyInput = false;
+  }
+
+  toggleSpecialtyInput() {
+    this.showSpecialtyInput = !this.showSpecialtyInput;
+    if (this.showSpecialtyInput) {
+      this.loadSpecialties();
+      this.filteredSpecialties = this.specialtiesList;
+    }
+  }
+
+  filterSpecialties(): void {
+    this.filteredSpecialties = this.specialtiesList.filter(specialty =>
+      specialty.SpecialtyCode.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+
   private createSpecialtyFormGroup(specialty: any): FormGroup {
     return this.fb.group({
       Enable: [specialty.Enable || false],
       SpecialtyCode: [specialty.SpecialtyCode || '', Validators.required]
     });
   }
+  
+
 
   addSingleServiceCode(): void {
     const proceduresArray = this.rationalForm.get('procedures') as FormArray;
@@ -161,7 +207,8 @@ export class RationalDataComponent implements OnInit {
   private createProcedureFormGroup(procedure: any): FormGroup {
     if (procedure.serviceCodeList || procedure.serviceCode !== undefined) {
       return this.fb.group({
-        serviceCode: [procedure.serviceCodeList, Validators.required]
+        serviceCode: [procedure.serviceCodeList, Validators.required],
+        _id: [procedure._id]
       });
     } else {
       return this.fb.group({
@@ -205,18 +252,6 @@ export class RationalDataComponent implements OnInit {
     this.rationalForm.patchValue({ modifiers: updatedModifiers.join(',') });
   }
 
-  onSubmit(): void {
-    if (this.rationalForm.invalid) {
-      this.rationalForm.markAllAsTouched();
-      console.error("Form is invalid. Please check the required fields.");
-      return;
-    }
-    console.log(this.rationalForm.value);
-  }
-
-  get specialties(): FormArray {
-    return this.rationalForm.get('specialties') as FormArray;
-  }
 
   toggleSpecialtyEnable(index: number): void {
     const specialty = this.specialties.at(index);
@@ -236,6 +271,43 @@ export class RationalDataComponent implements OnInit {
       }
       return null;
     };
+  }
+
+  get specialties(): FormArray {
+    return this.rationalForm.get('specialties') as FormArray;
+  }
+
+  onSubmit(): void {
+    if (this.rationalForm.invalid) {
+      this.rationalForm.markAllAsTouched();
+      console.error("Form is invalid. Please check the required fields.");
+      return;
+    }
+    if(this.isEditMode){
+      this.rServe.updateRationale(this.id,this.rationalForm.value).subscribe({
+        next: (res: any) => {
+          console.log('Rationale updated successfully:', res);
+          alert('Successful')
+          this.router.navigate(['/user/rationale']);
+        },
+        error: (error) => {
+          console.error('Error updating rationale:', error);
+          alert(error.error.message);
+        }
+      })
+    }else{
+      this.rServe.AddRationale(this.rationalForm.value).subscribe({
+        next: (res: any) => {
+          console.log('Rationale added successfully:', res);
+          this.router.navigate(['/user/rationale']);
+          alert('Successful')
+        },
+        error: (error) => {
+          console.error('Error adding rationale:', error);
+          alert(error.error.message);
+        }
+      })
+    }
   }
   
 }

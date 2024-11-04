@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +27,23 @@ export class UserService {
   //   return this.http.get(this.userApi, { headers, params });
   // }
 
-  getRationalList(){
-    return this.http.get(`${this.userApi}/user/rationale`);
-  }
 
+
+  getRationalList(page: number, pageSize: number, groupId?: any, specialty?: any) {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (groupId !== null && groupId !== undefined) {
+      params = params.set('GroupID', groupId.toString());
+    }
+    if (specialty) { 
+    params = params.set('SpecialtyCode', specialty); 
+    }
+
+    return this.http.get(`${this.userApi}/user/rationale`, { params });
+  }
+  
   getRationalData(id:any){
     return this.http.get(`${this.userApi}/user/rationale/${id}`);
   }
@@ -43,6 +57,9 @@ export class UserService {
   }
   updateRationale(id:any,body:any){
     return this.http.put(`${this.userApi}/user/rationale/${id}`,body);
+  }
+    AddRationale(body:any){
+    return this.http.post(`${this.userApi}/user/rationale`,body);
   }
 
 }

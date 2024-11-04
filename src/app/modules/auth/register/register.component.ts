@@ -60,8 +60,11 @@ export class RegisterComponent implements OnInit {
   }
 
   setUserType(type: string): void {
+    if(type === 'admin'){
+      alert('autherisation denied ! converted to user')
+    }
     this.registerForm.patchValue({
-      user_type: type
+      user_type: 'user'
     });
   }
 

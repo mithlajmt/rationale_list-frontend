@@ -5,6 +5,7 @@ import { RationalListComponent } from './components/rational-list/rational-list.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TruncatePipe } from 'src/app/pipes/truncate.pipe';
 import { RationalDataComponent } from './components/rational-data/rational-data.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 
 
@@ -14,7 +15,8 @@ import { RationalDataComponent } from './components/rational-data/rational-data.
     UserComponent,
        RationalListComponent,
        TruncatePipe,
-       RationalDataComponent
+       RationalDataComponent,
+       SidebarComponent
   ],
   imports: [
     CommonModule,

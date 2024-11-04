@@ -7,8 +7,8 @@ import { RationalDataComponent } from './components/rational-data/rational-data.
 const routes: Routes = [
   { path: '', redirectTo: 'rationale', pathMatch: 'full' },
   { path: 'rationale', component: RationalListComponent },
-  { path: 'rationale/:id', component: RationalDataComponent },
   { path: 'rationale/add', component: RationalDataComponent },
+  { path: 'rationale/:id', component: RationalDataComponent },
   // ... other routes
 ];
 

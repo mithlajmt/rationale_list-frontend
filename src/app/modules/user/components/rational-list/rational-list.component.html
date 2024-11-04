@@ -1,63 +1,126 @@
-<div *ngIf="show" class="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-4xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-      Rationale List
-    </h1>
-
-    <!-- Add New Rationale Button -->
-    <div class="mb-6 flex justify-end">
-      <button (click)="navigateToAddNew()" 
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-200">
-        Add New Rationale
-      </button>
+<div *ngIf="show" class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-extrabold tracking-tight mb-4">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-indigo-600">
+          Rationale List Manager
+        </span>
+      </h1>
+      <p class="text-gray-600 text-lg">Manage and explore your rationales efficiently</p>
     </div>
 
-    <!-- Search and Filter Section (Optional) -->
-    <div class="mb-6 flex justify-end">
-      <div class="relative">
-        <input type="text" placeholder="Search rationales..." 
-               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+    <!-- Action Bar -->
+    <div class="mb-12 flex flex-col sm:flex-row justify-between items-center gap-6">
+      <button (click)="navigateToAddNew()" 
+              class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5">
+        <span class="mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </span>
+        Add New Rationale
+      </button>
+
+      <!-- Filter Section -->
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <div class="relative">
+          <select [(ngModel)]="selectedGroup" 
+          class="appearance-none w-full bg-white px-4 py-2 pr-8 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:border-gray-300 transition-colors">
+    <option value=""  >ALL GROUP</option>
+    <option *ngFor="let group of rationaleGroups" [value]="group.GroupID">
+      {{ group.GroupName }}
+    </option>
+  </select>
+  
+          <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- keep this here -->
+
+        <div class="relative">
+          <select [(ngModel)]="selectedSpecialty"
+                  class="appearance-none w-full bg-white px-4 py-2 pr-8 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:border-gray-300 transition-colors">
+            <option value="">All Specialties</option>
+            <option *ngFor="let code of specialtyCodes" [value]="code">
+              {{ code }}
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+
+        <button (click)="applyFilters()" 
+                class="px-6 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 transition duration-200 flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+          Filter
+        </button>
       </div>
     </div>
 
     <!-- Rationale Cards -->
-    <div class="space-y-6">
+    <div class="grid gap-6">
       <div *ngFor="let rationale of rationaleData" 
-           class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 cursor-pointer"
+           class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-blue-200"
            (click)="navigateToDetails(rationale.RationaleID)">
-  
-        <!-- Header Section -->
-        <div class="p-6 flex justify-between items-center">
-          <div class="flex items-center space-x-4">
-            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
-              {{ rationale.RationaleID }}
+        <div class="p-6">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                {{ rationale.RationaleID }}
+              </div>
             </div>
-            <div>
-              <h2 class="text-xl font-semibold text-gray-800">{{ rationale.RationaleSummary }}</h2>
-              <p>
+            <div class="flex-1 min-w-0">
+              <h2 class="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
+                {{ rationale.RationaleSummary }}
+              </h2>
+              <p class="text-gray-600">
                 {{ rationale.RationaleText | truncate: 100 : rationale.showFullText }}
-                <span class="text-blue-500 cursor-pointer" (click)="rationale.showFullText = !rationale.showFullText">
+                <button (click)="$event.stopPropagation(); rationale.showFullText = !rationale.showFullText"
+                        class="ml-2 text-blue-600 hover:text-blue-800 font-medium transition-colors">
                   {{ rationale.showFullText ? 'See less' : 'See more' }}
-                </span>
+                </button>
               </p>
             </div>
           </div>
-
-          <!-- Toggle Button -->
-          <button (click)="toggleSpecialty(rationale, $event)" 
-                  [ngClass]="{
-                    'toggle-btn': true,
-                    'active': rationale.enable
-                  }"
-                  class="focus:outline-none">
-            <span class="toggle-label">{{ rationale.enable ? 'Enabled' : 'Disabled' }}</span>
-            <span class="toggle-slider"></span>
-          </button>
         </div>
       </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-12 flex justify-center items-center gap-4">
+      <button (click)="goToPage(currentPage - 1)" 
+              [disabled]="currentPage === 1"
+              class="px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed
+                     bg-white border border-gray-200 hover:bg-gray-50 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Previous
+      </button>
+      
+      <span class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      
+      <button (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+              class="px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed
+                     bg-white border border-gray-200 hover:bg-gray-50 transition-colors">
+        Next
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
